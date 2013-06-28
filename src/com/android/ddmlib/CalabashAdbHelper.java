@@ -6,7 +6,7 @@ public class CalabashAdbHelper {
     public static final int ADB_PORT;
 
     private static final int DEFAULT_ADB_PORT = 5037;
-    private static final String ENV_VAR_ADB_PORT = "ANDROID_ADB_PORT";
+    private static final String ENV_VAR_ADB_PORT = "ANDROID_ADB_SERVER_PORT";
 
     static {
         int port = DEFAULT_ADB_PORT;
