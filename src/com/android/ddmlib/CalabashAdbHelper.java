@@ -1,6 +1,7 @@
 package com.android.ddmlib;
 
 import java.net.InetSocketAddress;
+import java.util.concurrent.TimeUnit;
 
 public class CalabashAdbHelper {
     public static final int ADB_PORT;
@@ -20,6 +21,6 @@ public class CalabashAdbHelper {
     }
 
     public static RawImage getFrameBuffer(Device device) throws Exception {
-        return AdbHelper.getFrameBuffer(new InetSocketAddress("127.0.0.1", ADB_PORT), device);
+        return AdbHelper.getFrameBuffer(new InetSocketAddress("127.0.0.1", ADB_PORT), device, 3, TimeUnit.SECONDS);
     }
 }
