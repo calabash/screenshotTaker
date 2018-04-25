@@ -44,7 +44,7 @@ task integrationTest(type: JavaExec) {
             throw new GradleException('ANDROID_HOME environment variable must be set to proper Android SDK location before executiong this test')
         }
 
-        def adb = file("$androidHome/platform-tools/adb")
+        def adb = "$androidHome/platform-tools/adb"
 
         javaexec {
             main = "-jar"
