@@ -28,9 +28,13 @@ jar {
     manifest {
         attributes 'Main-Class': 'sh.calaba.screenshot.ScreenshotTaker'
     }
+
+    baseName = 'screenshotTaker'
 }
 
 task integrationTest(type: JavaExec) {
+
+
     def imageFromAppFileName = 'screenshotTakerTest.png'
     def imageFromAdbFileName = 'adbScreenshotTest.png'
 
@@ -44,11 +48,12 @@ task integrationTest(type: JavaExec) {
             throw new GradleException('ANDROID_HOME environment variable must be set to proper Android SDK location before executiong this test')
         }
 
-        def adb = "$androidHome/platform-tools/adb"
+        def adb = new File(androidHome, 'platform-tools/adb')
+        def jar = new File(rootDir, 'screenshotTaker.jar')
 
         javaexec {
             main = "-jar"
-            args = ["$rootDir/screenshotTaker.jar", deviceSerial, "$rootDir/$imageFromAppFileName"]
+            args = [jar, deviceSerial, new File(rootDir, imageFromAppFileName)]
         }
 
         def pathOnDevice = "/sdcard/$imageFromAdbFileName"
@@ -56,7 +61,7 @@ task integrationTest(type: JavaExec) {
             commandLine adb, '-s', deviceSerial, 'shell', 'screencap', pathOnDevice
         }
         exec {
-            commandLine adb, '-s', deviceSerial, 'pull', pathOnDevice, "$rootDir/$imageFromAdbFileName"
+            commandLine adb, '-s', deviceSerial, 'pull', pathOnDevice, new File(rootDir, imageFromAdbFileName)
         }
     }
 
@@ -66,8 +71,10 @@ task integrationTest(type: JavaExec) {
     main = 'src.ScreenshotTakerTest'
     classpath = sourceSets.intTest.runtimeClasspath
     args = [imageFromAppFileName, imageFromAdbFileName]
+
+    dependsOn build
 }
 
 tasks.withType(Jar) {
-    destinationDir = file("$rootDir")
+    destinationDir = rootDir
 }
