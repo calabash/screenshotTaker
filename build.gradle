@@ -1,0 +1,70 @@
+plugins {
+    id 'java'
+    id 'application'
+}
+
+mainClassName = 'sh.calaba.screenshot.ScreenshotTaker'
+
+sourceSets {
+    intTest {
+        java.srcDir file('src/intTest/java')
+        compileClasspath += sourceSets.main.output + configurations.testRuntime
+        runtimeClasspath += output + compileClasspath
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'lib', include: '*.jar')
+    testCompile 'junit:junit:4.12'
+}
+
+repositories {
+    jcenter()
+}
+
+jar {
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+
+    manifest {
+        attributes 'Main-Class': 'sh.calaba.screenshot.ScreenshotTaker'
+    }
+}
+
+task integrationTest(type: JavaExec) {
+    def imageFromAppFileName = 'screenshotTakerTest.png'
+    def imageFromAdbFileName = 'adbScreenshotTest.png'
+
+    doFirst {
+        if (!project.hasProperty('deviceSerial')) {
+            throw new GradleException('deviceSerial property value must be provided for the task. Usage: gradle integrationTest -PdeviceSerial=<your-device-serial>')
+        }
+
+        def androidHome = System.getenv('ANDROID_HOME')
+        if (androidHome == null) {
+            throw new GradleException('ANDROID_HOME environment variable must be set to proper Android SDK location before executiong this test')
+        }
+
+        def adb = "$androidHome/platform-tools/adb"
+
+        javaexec {
+            main = "-jar"
+            args = ["$rootDir/screenshotTaker.jar", deviceSerial, "$rootDir/$imageFromAppFileName"]
+        }
+
+        def pathOnDevice = "/sdcard/$imageFromAdbFileName"
+        exec {
+            commandLine adb, '-s', deviceSerial, 'shell', 'screencap', pathOnDevice
+        }
+        exec {
+            commandLine adb, '-s', deviceSerial, 'pull', pathOnDevice, "$rootDir/$imageFromAdbFileName"
+        }
+    }
+
+    main = 'src.ScreenshotTakerTest'
+    classpath = sourceSets.intTest.runtimeClasspath
+    args = [imageFromAppFileName, imageFromAdbFileName]
+}
+
+tasks.withType(Jar) {
+    destinationDir = file("$rootDir")
+}
