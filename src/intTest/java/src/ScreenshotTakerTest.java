@@ -1,32 +1,25 @@
 package src;
 
-import org.junit.Test;
-
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-import static junit.framework.TestCase.assertTrue;
-import static junit.framework.TestCase.fail;
-
 public class ScreenshotTakerTest {
     private static final double defaultMaxError = 0.03;
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, AssertionError, IllegalArgumentException {
         if (args.length < 2 || args.length > 3) {
-            fail("usage: ScreenshotTakerTest.main(String pathToImgA, String pathToImgB, optional double maxError)");
+            throw new IllegalArgumentException("Usage: ScreenshotTakerTest.main(String pathToImgA, String pathToImgB, optional double maxError)");
         }
 
-        double maxError;
-        maxError = args.length > 2 ? Double.parseDouble(args[2]) : defaultMaxError;
+        double maxError = args.length > 2 ? Double.parseDouble(args[2]) : defaultMaxError;
 
-        try {
-            assertTrue(compareImages(args[0], args[1], maxError));
-            System.out.println("Test completed successfully");
-        } catch (IOException ex) {
-            fail(ex.toString());
+        if (!compareImages(args[0], args[1], maxError)) {
+            throw new AssertionError("Screenshot test failed.");
         }
+
+        System.out.println("Test completed successfully");
     }
 
     private static boolean compareImages(String pathToImgA, String pathToImgB, double maxError) throws IOException {
