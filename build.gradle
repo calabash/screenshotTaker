@@ -33,8 +33,6 @@ jar {
 }
 
 task integrationTest(type: JavaExec) {
-
-
     def imageFromAppFileName = 'screenshotTakerTest.png'
     def imageFromAdbFileName = 'adbScreenshotTest.png'
 
