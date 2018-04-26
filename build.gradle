@@ -49,6 +49,36 @@ task integrationTest(type: JavaExec) {
         def adb = new File(androidHome, 'platform-tools/adb')
         def jar = new File(rootDir, 'screenshotTaker.jar')
 
+        String deviceSerial = null;
+
+        def getSerailResult = exec {
+            standardOutput = new ByteArrayOutputStream();
+            ignoreExitValue = true
+
+            commandLine adb, 'get-serialno'
+
+            ext.output = {
+                return standardOutput.toString()
+            }
+        }
+
+        if (getSerailResult.getExitValue() == 0) {
+            deviceSerial = ext.output().trim()
+        } else {
+            deviceSerial = System.getenv('ADB_SERIAL')
+            if (deviceSerial == null) {
+                System.out.println(ext.output())
+
+                exec {
+                    commandLine adb, 'devices'
+                }
+
+                def message = 'Please set ADB_SERIAL environment variable to identify the device: $ ADB_SERIAL=<serial number> gradlew integrationTest'
+                System.out.println(message)
+                throw new GradleException()
+            }
+        }
+
         javaexec {
             main = "-jar"
             args = [jar, deviceSerial, new File(rootDir, imageFromAppFileName)]
