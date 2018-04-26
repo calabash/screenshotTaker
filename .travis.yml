@@ -6,10 +6,9 @@ group: edge
 
 before_install:
     - sudo apt-get -qq update
-    - sudo apt-get install gradle
 
 script:
-  - gradlew integrationTest
+  - bin/travis.sh
 
 android:
   components:

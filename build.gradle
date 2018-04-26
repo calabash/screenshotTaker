@@ -37,10 +37,6 @@ task integrationTest(type: JavaExec) {
     def imageFromAdbFileName = 'adbScreenshotTest.png'
 
     doFirst {
-        if (!project.hasProperty('deviceSerial')) {
-            throw new GradleException('deviceSerial property value must be provided for the task. Usage: gradlew integrationTest -PdeviceSerial=<your-device-serial>')
-        }
-
         def androidHome = System.getenv('ANDROID_HOME')
         if (androidHome == null) {
             throw new GradleException('ANDROID_HOME environment variable must be set to proper Android SDK location before executiong this test')
