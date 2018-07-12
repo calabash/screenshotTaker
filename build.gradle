@@ -22,6 +22,11 @@ repositories {
     jcenter()
 }
 
+compileJava {
+  sourceCompatibility = '1.8'
+  targetCompatibility = '1.8'
+}
+
 jar {
     from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
 
