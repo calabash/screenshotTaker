@@ -2,4 +2,5 @@ screenshotTaker.jar
 adbScreenshotTest.png
 screenshotTakerTest.png
 build
+bin
 .gradle
