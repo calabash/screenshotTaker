@@ -1,2 +1,2 @@
 #!/bin/sh
-./gradlew integrationTest
+./gradlew build
