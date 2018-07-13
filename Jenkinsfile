@@ -17,6 +17,11 @@ pipeline {
                    message: "${env.PROJECT_NAME} [${env.GIT_BRANCH}] #${env.BUILD_NUMBER} *Started* (<${env.BUILD_URL}|Open>)")
       }
     }
+    stage('Run emulator') {
+      steps {
+        sh 'bin/start_emulator.sh'
+      }
+    }
     stage('Build and test') {
       steps {
         sh './gradlew integrationTest'
