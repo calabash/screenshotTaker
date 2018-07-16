@@ -1,8 +1,15 @@
 Build
 =====
+
+| master  |
+|---------|
+|[![Build Status](http://calabash-ci.xyz:8081/job/screenshotTaker/job/master/badge/icon)](http://calabash-ci.xyz:8081/job/screenshotTaker/job/master/)|
+|[![Build Status](https://travis-ci.org/calabash/screenshotTaker.svg?branch=master)](https://travis-ci.org/calabash/screenshotTaker)|
+
+
 To build the jar run:
 
-    gradlew build
+    ./gradlew build
 
 Running
 =======
@@ -14,6 +21,6 @@ Testing
 =======
 To run integration tests
 
-    gradlew integrationTest -PdeviceSerial=<serial number>
+    ./gradlew integrationTest -PdeviceSerial=<serial number>
     
 Make sure that environment variable `ANDROID_HOME` is set to proper Android SDK location before running integration tests.
